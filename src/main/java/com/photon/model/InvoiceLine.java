@@ -1,5 +1,8 @@
 package com.photon.model;
 
+/**
+ * Creates InvoiceLine that holds all line details.
+ */
 public class InvoiceLine {
     private String itemName;
     private double itemPrice;

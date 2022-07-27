@@ -7,12 +7,18 @@ import java.text.SimpleDateFormat;
 
 public class Main {
 
+    /**
+     * Starts frame and initialises required field
+     */
     public static void main(String[] args) {
         InvoiceHeader.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         InvoiceHeader.dateFormat.setLenient(false);
         new DisplayedFrame().setVisible(true);
     }
 
+    /**
+     * Outputs initially loaded invoices
+     */
     public static void test(){
         for (int i = 0; i < InvoiceHeader.countInvoices(); i++) {
             InvoiceHeader invoice = InvoiceHeader.getInvoiceByIndex(i);

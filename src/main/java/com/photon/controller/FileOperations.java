@@ -4,29 +4,23 @@ import com.photon.InvalidFileTypeException;
 
 import java.io.*;
 
+/**
+ * Custom file manager class that extends the popular File class.
+ */
 public class FileOperations extends File{
     private static final String delimiter = ",";
 
-    public FileOperations(File file){
-        this(file.getPath());
-    }
-
-    public FileOperations(String pathname){
+    public FileOperations(String pathname) throws InvalidFileTypeException {
         super(pathname);
-        try{
             if (!this.getName().toLowerCase().endsWith(".csv"))
-                throw new InvalidFileTypeException(this.getName(), ".csv");
-        }catch (InvalidFileTypeException e){
-            e.printStackTrace();
-        }
+                throw new InvalidFileTypeException(this.getName(), new String[]{".csv"});
     }
 
     public String[][] readFile(){
         String[] lines = new String[]{};
-        FileInputStream f;
         byte[] bytes;
         try {
-            f = new FileInputStream(this);
+            FileInputStream f = new FileInputStream(this);
             bytes = new byte[f.available()];
             int result = f.read(bytes);
             f.close();

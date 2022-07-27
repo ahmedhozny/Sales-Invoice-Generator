@@ -6,24 +6,34 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * Creates invoice headers objects.
+ */
 public class InvoiceHeader{
 
+    /** Holds all invoices */
     private static final ArrayList<InvoiceHeader> INVOICE_HEADERS = new ArrayList<>();
 
     private static int nextInvoiceNumber = 1;
 
+    /** Used to format data as requested ("dd/MM/yyyy") */
     public static SimpleDateFormat dateFormat;
 
+    /** Data of each InvoiceHeaders Instance*/
     protected int invoiceNum;
     protected Date invoiceDate;
     protected String customerName;
-
     protected ArrayList<InvoiceLine> lines;
 
-    private InvoiceHeaderDraft invoiceHeaderDraft;
+    /**
+     * Holds another copy of InvoiceHeader instance.
+     * Any changes made to an invoice should be set at DraftInvoiceHeader first before finally getting applied here
+     */
+    private DraftInvoiceHeader draftInvoiceHeader;
 
-    //            this.headers = lines[0].split(delimiter);
-    //            lines = Arrays.copyOfRange(lines, 1, lines.length);
+    //this.headers = lines[0].split(delimiter);
+    //lines = Arrays.copyOfRange(lines, 1, lines.length);
+    /** Reconstructs all invoices. Should be called when raw data is available*/
     public static void reconstructInvoices(String[][] invoices, String[][] lines){
         INVOICE_HEADERS.clear();
         for (String[] strings : invoices) {
@@ -33,11 +43,11 @@ public class InvoiceHeader{
             InvoiceHeader.addInvoice(new InvoiceHeader(Integer.parseInt(row[0]), row[1], row[2]));
         }
 
-        INVOICE_HEADERS.sort((o1, o2) -> {
-            if (o1.getDate() == null) return 1;
-            if (o2.getDate() == null) return -1;
-            return o1.getDate().compareTo(o2.getDate());
-        });
+        //INVOICE_HEADERS.sort((o1, o2) -> {
+        //    if (o1.getDate() == null) return 1;
+        //    if (o2.getDate() == null) return -1;
+        //    return o1.getDate().compareTo(o2.getDate());
+        //});
         INVOICE_HEADERS.sort(Comparator.comparingInt(InvoiceHeader::getInvoiceNumber));
 
         for (String[] line: lines) {
@@ -49,10 +59,14 @@ public class InvoiceHeader{
 
         for (InvoiceHeader invoiceHeader : INVOICE_HEADERS) invoiceHeader.rebuildDraft();
 
+        // As requested. Calls test method to show loaded invoices
         Main.test();
 
     }
 
+    /**
+     * Returns InvoiceHeaders to its raw state.
+     */
     public static String[][] disassembleInvoices(){
         String[][] content = new String[INVOICE_HEADERS.size()][4];
         for (int i = 0; i < INVOICE_HEADERS.size(); i++){
@@ -65,6 +79,9 @@ public class InvoiceHeader{
         return content;
     }
 
+    /**
+     * Returns InvoiceLines to its raw state.
+     */
     public static String[][] disassembleLines(){
         ArrayList<String[]> content = new ArrayList<>();
         for (InvoiceHeader invoiceHeader : INVOICE_HEADERS) {
@@ -103,12 +120,18 @@ public class InvoiceHeader{
         return null;
     }
 
+    /**
+     * Called when new invoices is created for the first time.
+     */
     public InvoiceHeader(){
         this.invoiceNum = InvoiceHeader.nextInvoiceNumber++;
         lines = new ArrayList<>();
         rebuildDraft();
     }
 
+    /**
+     * Copies another InvoiceHeader instance to this.
+     */
     public InvoiceHeader(InvoiceHeader invoiceHeader){
         this.invoiceNum = invoiceHeader.invoiceNum;
         this.invoiceDate = invoiceHeader.invoiceDate;
@@ -120,6 +143,9 @@ public class InvoiceHeader{
         this(InvoiceHeader.nextInvoiceNumber++, date, customer);
     }
 
+    /**
+     * Constructs invoices that have their data available from existing raw data
+     */
     public InvoiceHeader(int invoiceNumber, String date, String customer){
         this.invoiceNum = invoiceNumber;
         if (date != null) {
@@ -135,18 +161,27 @@ public class InvoiceHeader{
         //rebuildDraft();
     }
 
+    /**
+     * Applies draft copy to this invoice
+     */
     public void applyDraft(){
-        this.invoiceNum = invoiceHeaderDraft.invoiceNum;
-        this.invoiceDate = invoiceHeaderDraft.invoiceDate;
-        this.customerName = invoiceHeaderDraft.customerName;
-        this.lines = invoiceHeaderDraft.lines;
+        this.invoiceNum = draftInvoiceHeader.invoiceNum;
+        this.invoiceDate = draftInvoiceHeader.invoiceDate;
+        this.customerName = draftInvoiceHeader.customerName;
+        this.lines = draftInvoiceHeader.lines;
         rebuildDraft();
     }
 
+    /**
+     * Creates a draft version of this invoice. Should be called if changes are discarded.
+     */
     public void rebuildDraft(){
-        this.invoiceHeaderDraft = new InvoiceHeaderDraft(this);
+        this.draftInvoiceHeader = new DraftInvoiceHeader(this);
     }
 
+    /**
+     * Searches for invoice line using its index. Returns InvoiceLine if found, NULL if not.
+     */
     public InvoiceLine getInvoiceLine(int index){
         if (index < lines.size()) return lines.get(index);
         return null;
@@ -156,6 +191,9 @@ public class InvoiceHeader{
         return this.lines.size();
     }
 
+    /**
+     * Calculates total price of invoice
+     */
     public double getTotalPrice() {
         double total = 0;
         for (InvoiceLine item : lines) {
@@ -169,6 +207,9 @@ public class InvoiceHeader{
         return invoiceNum;
     }
 
+    /**
+     * Returns a formatted version of InvoiceDate.
+     */
     public String getFormattedDate(){
         if (this.invoiceDate == null) return null;
             return dateFormat.format(this.invoiceDate);
@@ -190,8 +231,8 @@ public class InvoiceHeader{
         return customerName;
     }
 
-    public InvoiceHeaderDraft getDraft() {
-        return invoiceHeaderDraft;
+    public DraftInvoiceHeader getDraft() {
+        return draftInvoiceHeader;
     }
 
     @Override

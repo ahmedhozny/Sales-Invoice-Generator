@@ -5,6 +5,9 @@ import com.photon.model.InvoiceLine;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Prepares the representation needed for an invoice lines
+ */
 public class InvoiceLinesTableModel extends AbstractTableModel{
 
     private final InvoiceHeader invoiceHeader;

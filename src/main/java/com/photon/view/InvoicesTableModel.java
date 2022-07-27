@@ -4,6 +4,9 @@ import com.photon.model.InvoiceHeader;
 
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * Prepares the representation needed for an invoice headers
+ */
 public class InvoicesTableModel extends AbstractTableModel {
 
     @Override

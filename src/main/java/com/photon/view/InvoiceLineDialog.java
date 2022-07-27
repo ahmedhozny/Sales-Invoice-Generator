@@ -1,41 +1,43 @@
 package com.photon.view;
 
 import com.photon.controller.Controller;
-import com.photon.model.InvoiceHeaderDraft;
+import com.photon.model.DraftInvoiceHeader;
 import com.photon.model.InvoiceLine;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Create a dialog to add new or edit existing invoice lines.
+ */
 public class InvoiceLineDialog extends JDialog {
     public static final int ADD_FRAME = 0;
     public static final int UPDATE_FRAME = 1;
 
     private int frameType;
 
+    /** Declaration of needed containers */
     private JButton jButton1;
     private JButton jButton2;
     private JLabel jLabel1;
     private JLabel jLabel2;
     private JLabel jLabel3;
     private JLabel jLabel4;
-    private JLabel jLabel5;
     private JLabel jLabel6;
-    private JLabel jLabel7;
     private JPanel jPanel1;
     private JPanel jPanel2;
     private JPanel jPanel3;
     private JPanel jPanel4;
-    private JPanel jPanel5;
     private JPanel jPanel6;
     private JTextField jTextField1;
     private JTextField jTextField2;
     private JTextField jTextField3;
 
+    /** Holds raw data of InvoiceLine*/
     private String[] data = new String[4];
 
-    public InvoiceLineDialog(Controller listener, int frameType, InvoiceHeaderDraft invoice){
+    public InvoiceLineDialog(Controller listener, int frameType, DraftInvoiceHeader invoice){
         super(DisplayedFrame.getInstance(), frameType == 1 ? "Update existing item" : "Add new item", true);
         if (frameType == UPDATE_FRAME){
             InvoiceLine item = invoice.getInvoiceLine(listener.getSelectedItem());
@@ -178,30 +180,6 @@ public class InvoiceLineDialog extends JDialog {
 
         getContentPane().add(jPanel4);
 
-        /*jLabel5.setText("Total");
-
-        jLabel7.setText("");
-
-        GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-                jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel5, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel7, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(170, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-                jPanel5Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel5Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                .addComponent(jLabel7))
-        );
-
-        getContentPane().add(jPanel5);*/
-
         jButton1.setText(frameType == UPDATE_FRAME ? "Update" : "Add");
         jButton1.addActionListener(listener);
         jButton1.setActionCommand(Controller.ITEM_FRAME_OKAY);
@@ -248,6 +226,7 @@ public class InvoiceLineDialog extends JDialog {
         data[3] = jTextField3.getText();
     }
 
+    /** Initialises all variables */
     public void init(){
         jPanel1 = new JPanel();
         jLabel1 = new JLabel();
@@ -261,9 +240,6 @@ public class InvoiceLineDialog extends JDialog {
         jPanel4 = new JPanel();
         jLabel4 = new JLabel();
         jTextField3 = new JTextField();
-        jPanel5 = new JPanel();
-        jLabel5 = new JLabel();
-        jLabel7 = new JLabel();
         jPanel6 = new JPanel();
         jButton1 = new JButton();
         jButton2 = new JButton();
