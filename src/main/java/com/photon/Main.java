@@ -3,6 +3,7 @@ package com.photon;
 import com.photon.model.InvoiceHeader;
 import com.photon.view.DisplayedFrame;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.text.SimpleDateFormat;
 
 public class Main {
@@ -13,7 +14,11 @@ public class Main {
     public static void main(String[] args) {
         InvoiceHeader.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         InvoiceHeader.dateFormat.setLenient(false);
-        new DisplayedFrame().setVisible(true);
+        try {
+            new DisplayedFrame().setVisible(true);
+        } catch (InstanceAlreadyExistsException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**

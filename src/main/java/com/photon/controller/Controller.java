@@ -124,13 +124,13 @@ public class Controller implements ActionListener, MouseListener{
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Files ending with .csv", "csv"));
         fileChooser.setDialogTitle("Select Invoices file...");
-        fileChooser.setSelectedFile(new File("com.photon/InvoiceHeader.csv"));
+        fileChooser.setSelectedFile(new File("InvoiceHeader.csv"));
         int result = fileChooser.showSaveDialog(DisplayedFrame.getInstance());
         if (result == JFileChooser.APPROVE_OPTION) {
             String invoice_path = fileChooser.getSelectedFile().getPath();
             if (!invoice_path.toLowerCase().endsWith(".csv")) invoice_path = invoice_path + ".csv";
             fileChooser.setDialogTitle("Select Lines file...");
-            fileChooser.setSelectedFile(new File("com.photon/InvoiceLine.csv"));
+            fileChooser.setSelectedFile(new File("InvoiceLine.csv"));
             result = fileChooser.showSaveDialog(DisplayedFrame.getInstance());
             if (result == JFileChooser.APPROVE_OPTION) {
                 String lines_path = fileChooser.getSelectedFile().getPath();

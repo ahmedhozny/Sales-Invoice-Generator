@@ -1,8 +1,6 @@
 package com.photon.view;
 
-import com.photon.InvalidFileTypeException;
 import com.photon.controller.Controller;
-import com.photon.controller.FileOperations;
 import com.photon.model.InvoiceHeader;
 import com.photon.model.DraftInvoiceHeader;
 
@@ -93,14 +91,9 @@ public class DisplayedFrame extends JFrame{
      * Constructor of DisplayedFrame instance.
      * This designs the displayed frame and makes up the window and assign each container to each listener.
      */
-    public DisplayedFrame() {
-        try {
-            if (instance != null) throw new InstanceAlreadyExistsException("Only one instance is allowed");
-        } catch (InstanceAlreadyExistsException e){
-            System.out.println("");
-            e.printStackTrace();
-            return;
-        }
+    public DisplayedFrame() throws InstanceAlreadyExistsException{
+        if (instance != null)
+            throw new InstanceAlreadyExistsException("Only one main display instance is allowed");
 
         instance = this;
         this.init();
@@ -369,16 +362,22 @@ public class DisplayedFrame extends JFrame{
         this.add(jPanel2);
         this.setExtendedState(MAXIMIZED_BOTH);
 
-        /* Opens resource files to display some data upon booting */
-        try {
-            FileOperations invoices = new FileOperations(getClass().getClassLoader().getResource("com.photon/InvoiceHeader.csv").toURI().getPath());
-            FileOperations lines = new FileOperations(getClass().getClassLoader().getResource("com.photon/InvoiceLine.csv").toURI().getPath());
-            InvoiceHeader.reconstructInvoices(invoices.readFile(), lines.readFile());
-        } catch (InvalidFileTypeException | URISyntaxException e) {
-            JOptionPane.showMessageDialog(DisplayedFrame.getInstance(), "An error has occurred while loading resource files. Invoices tables will remain empty", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        /* Displays some data upon booting */
 
+        String[][] initialInvoiceHeaders = new String[][]{
+                {"1", "22/11/2020", "Ali"},
+                {"2", "13/10/2021", "Saleh"}
+        };
+
+        String[][] initialInvoiceLines = new String[][]{
+                {"1", "Mobile", "3200", "1"},
+                {"1", "Cover", "20", "2"},
+                {"1", "Headphone", "130", "1"},
+                {"2", "Laptop", "4000", "1"},
+                {"2", "Mouse", "35", "1"},
+        };
+
+        InvoiceHeader.reconstructInvoices(initialInvoiceHeaders, initialInvoiceLines);
         this.updateInvoicesTable();
     }
 
