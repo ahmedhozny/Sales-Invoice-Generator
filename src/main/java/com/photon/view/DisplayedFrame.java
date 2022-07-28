@@ -8,7 +8,6 @@ import javax.management.InstanceAlreadyExistsException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
@@ -21,31 +20,31 @@ public class DisplayedFrame extends JFrame{
     private Controller listener;
 
     /** Declaration of needed containers */
-    private JButton jButton1;
-    private JButton jButton2;
-    private JButton jButton3;
-    private JButton jButton4;
-    private JButton jButton5;
-    private JButton jButton6;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
-    private JLabel jLabel4;
-    private JLabel jLabel5;
-    private JLabel jLabel6;
-    private JLabel jLabel7;
-    private JLabel jLabel8;
-    private JMenu jMenu1;
-    private JMenuBar jMenuBar1;
-    private JMenuItem jMenuItem1;
-    private JMenuItem jMenuItem2;
-    private JPanel jPanel1;
-    private JPanel jPanel2;
-    private JScrollPane jScrollPane1;
-    private JScrollPane jScrollPane2;
-    private JTable jTable1;
-    private JTable jTable2;
-    private JTextField jTextField1;
-    private JTextField jTextField2;
+    private JButton createInvoiceButton;
+    private JButton deleteInvoiceButton;
+    private JButton saveChangesButton;
+    private JButton cancelButton;
+    private JButton addLineButton;
+    private JButton deleteLineButton;
+    private JLabel invoiceNumberKeyLabel;
+    private JLabel invoiceNumberValueLabel;
+    private JLabel invoiceDateLabel;
+    private JLabel invoiceCustomerLabel;
+    private JLabel invoiceLinesLabel;
+    private JLabel invoiceTotalKeyLabel;
+    private JLabel invoiceTotalValueLabel;
+    private JMenu fileMenu;
+    private JMenuBar menuBar;
+    private JMenuItem loadMenuItem;
+    private JMenuItem saveMenuItem;
+    private JPanel invoiceHeadersPanel;
+    private JPanel invoiceLinesPanel;
+    private JScrollPane invoiceHeadersTableScrollPane;
+    private JScrollPane invoiceLinesTableScrollPane;
+    private JTable invoiceHeadersTable;
+    private JTable invoiceLinesTable;
+    private JTextField invoiceDateField;
+    private JTextField invoiceCustomerField;
 
     /** Returns DisplayedFrame instance */
     public static DisplayedFrame getInstance(){
@@ -53,38 +52,38 @@ public class DisplayedFrame extends JFrame{
     }
 
     public String getDateTextField(){
-        return jTextField1.getText();
+        return invoiceDateField.getText();
     }
 
     public String getCustomerTextField(){
-        return jTextField2.getText();
+        return invoiceCustomerField.getText();
     }
 
     /** Updates invoices table. Call this when changes to invoice headers are made */
     public void updateInvoicesTable(){
-        jTable1.setModel(new InvoicesTableModel());
+        invoiceHeadersTable.setModel(new InvoicesTableModel());
     }
 
     /** Changes selected invoice programmatically */
     public void selectInvoicesRow(int row){
-        jTable1.changeSelection(row,0,false, false);
+        invoiceHeadersTable.changeSelection(row,0,false, false);
     }
 
     /** Updates invoice lines table. Call this when changes to invoice lines are made */
     public void updateLinesTable(DraftInvoiceHeader invoice){
         if (invoice == null){
-            jLabel3.setText("");
-            jTextField1.setText("");
-            jTextField2.setText("");
-            jLabel8.setText("");
-            jTable2.setModel(new InvoiceLinesTableModel(null));
+            invoiceNumberValueLabel.setText("");
+            invoiceDateField.setText("");
+            invoiceCustomerField.setText("");
+            invoiceTotalValueLabel.setText("");
+            invoiceLinesTable.setModel(new InvoiceLinesTableModel(null));
             return;
         }
-        jLabel3.setText(String.valueOf(invoice.getInvoiceNumber()));
-        jTextField1.setText(invoice.getFormattedDate());
-        jTextField2.setText(invoice.getCustomer());
-        jLabel8.setText(String.valueOf(invoice.getTotalPrice()));
-        jTable2.setModel(new InvoiceLinesTableModel(invoice));
+        invoiceNumberValueLabel.setText(String.valueOf(invoice.getInvoiceNumber()));
+        invoiceDateField.setText(invoice.getFormattedDate());
+        invoiceCustomerField.setText(invoice.getCustomer());
+        invoiceTotalValueLabel.setText(String.valueOf(invoice.getTotalPrice()));
+        invoiceLinesTable.setModel(new InvoiceLinesTableModel(invoice));
     }
 
     /**
@@ -103,7 +102,7 @@ public class DisplayedFrame extends JFrame{
         getContentPane().setLayout(new java.awt.GridLayout(1, 2, 20, 0));
 
 
-        jTable1.setModel(new DefaultTableModel(
+        invoiceHeadersTable.setModel(new DefaultTableModel(
                 new Object [][] {},
                 new String [] {
                         "No.", "Date", "Customer", "Total"
@@ -125,51 +124,51 @@ public class DisplayedFrame extends JFrame{
             }
         });
 
-        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jTable1.getSelectionModel().addListSelectionListener(e -> this.listener.invoiceRowChanged(e));
-        jTable1.setName("invoices");
-        jScrollPane1.setViewportView(jTable1);
+        invoiceHeadersTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        invoiceHeadersTable.getSelectionModel().addListSelectionListener(e -> this.listener.invoiceRowChanged(e));
+        invoiceHeadersTable.setName("invoices");
+        invoiceHeadersTableScrollPane.setViewportView(invoiceHeadersTable);
 
-        jButton1.setText("Create New Invoice");
-        jButton1.setActionCommand(Controller.BUTTON_NEW_INVOICE);
-        jButton1.addActionListener(listener);
-        jButton2.setText("Delete Invoice");
-        jButton2.setActionCommand(Controller.BUTTON_DELETE_INVOICE);
-        jButton2.addActionListener(listener);
+        createInvoiceButton.setText("Create New Invoice");
+        createInvoiceButton.setActionCommand(Controller.BUTTON_NEW_INVOICE);
+        createInvoiceButton.addActionListener(listener);
+        deleteInvoiceButton.setText("Delete Invoice");
+        deleteInvoiceButton.setActionCommand(Controller.BUTTON_DELETE_INVOICE);
+        deleteInvoiceButton.addActionListener(listener);
 
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
+        GroupLayout invoiceHeadersPanelLayout = new GroupLayout(invoiceHeadersPanel);
+        invoiceHeadersPanel.setLayout(invoiceHeadersPanelLayout);
+        invoiceHeadersPanelLayout.setHorizontalGroup(
+                invoiceHeadersPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(invoiceHeadersPanelLayout.createSequentialGroup()
+                                .addGroup(invoiceHeadersPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(invoiceHeadersPanelLayout.createSequentialGroup()
                                                 .addGap(125, 125, 125)
-                                                .addComponent(jButton1)
+                                                .addComponent(createInvoiceButton)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(jButton2))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(deleteInvoiceButton))
+                                        .addGroup(invoiceHeadersPanelLayout.createSequentialGroup()
                                                 .addContainerGap()
-                                                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 452, GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(invoiceHeadersTableScrollPane, GroupLayout.PREFERRED_SIZE, 452, GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        invoiceHeadersPanelLayout.setVerticalGroup(
+                invoiceHeadersPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, invoiceHeadersPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 561, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(invoiceHeadersTableScrollPane, GroupLayout.PREFERRED_SIZE, 561, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButton1)
-                                        .addComponent(jButton2))
+                                .addGroup(invoiceHeadersPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(createInvoiceButton)
+                                        .addComponent(deleteInvoiceButton))
                                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel1);
+        getContentPane().add(invoiceHeadersPanel);
 
-        jTextField1.addActionListener(this.listener);
+        invoiceDateField.addActionListener(this.listener);
 
-        jTextField1.addFocusListener(new FocusAdapter() {
+        invoiceDateField.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 JTextField textField= (JTextField) e.getComponent();
                 if (!textField.getText().isEmpty()) {
@@ -185,7 +184,7 @@ public class DisplayedFrame extends JFrame{
             }
         });
 
-        jTextField1.addKeyListener(new KeyAdapter() {
+        invoiceDateField.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 JTextField textField= (JTextField) e.getComponent();
                 for (FocusListener listener:textField.getFocusListeners()) {
@@ -194,9 +193,9 @@ public class DisplayedFrame extends JFrame{
             }
         });
 
-        jTextField2.addActionListener(this.listener);
+        invoiceCustomerField.addActionListener(this.listener);
 
-        jTextField2.addFocusListener(new FocusAdapter() {
+        invoiceCustomerField.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
                 JTextField textField= (JTextField) e.getComponent();
                 for (ActionListener listener:textField.getActionListeners()){
@@ -205,7 +204,7 @@ public class DisplayedFrame extends JFrame{
             }
         });
 
-        jTextField2.addKeyListener(new KeyAdapter() {
+        invoiceCustomerField.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
                 JTextField textField= (JTextField) e.getComponent();
                 for (FocusListener listener:textField.getFocusListeners()) {
@@ -214,13 +213,13 @@ public class DisplayedFrame extends JFrame{
             }
         });
 
-        jLabel6.setText("Invoice Items:");
+        invoiceLinesLabel.setText("Invoice Lines:");
 
-        jLabel7.setText("Invoice Total:");
+        invoiceTotalKeyLabel.setText("Invoice Total:");
 
-        jLabel8.setText(null);
+        invoiceTotalValueLabel.setText(null);
 
-        jTable2.setModel(new DefaultTableModel(
+        invoiceLinesTable.setModel(new DefaultTableModel(
                 new Object [][] {},
                 new String [] {
                         "No.", "Item Name", "Item Price", "Count", "Item Total"
@@ -242,124 +241,124 @@ public class DisplayedFrame extends JFrame{
             }
         });
 
-        jTable2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jTable2.getSelectionModel().addListSelectionListener(e -> this.listener.lineRowChanged(e));
-        jTable2.addMouseListener(listener);
-        jScrollPane2.setViewportView(jTable2);
+        invoiceLinesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        invoiceLinesTable.getSelectionModel().addListSelectionListener(e -> this.listener.lineRowChanged(e));
+        invoiceLinesTable.addMouseListener(listener);
+        invoiceLinesTableScrollPane.setViewportView(invoiceLinesTable);
 
-        jLabel2.setText("Invoice Number:");
+        invoiceNumberKeyLabel.setText("Invoice Number:");
 
-        jLabel3.setText(null);
+        invoiceNumberValueLabel.setText(null);
 
-        jLabel4.setText("Invoice Date:");
+        invoiceDateLabel.setText("Invoice Date:");
 
-        jLabel5.setText("Customer Name:");
+        invoiceCustomerLabel.setText("Customer Name:");
 
-        jButton3.setText("Save");
-        jButton3.addActionListener(this.listener);
-        jButton3.setActionCommand(Controller.BUTTON_INVOICE_SAVE);
-        jButton4.setText("Cancel");
-        jButton4.addActionListener(this.listener);
-        jButton4.setActionCommand(Controller.BUTTON_INVOICE_CANCEL);
+        saveChangesButton.setText("Save");
+        saveChangesButton.addActionListener(this.listener);
+        saveChangesButton.setActionCommand(Controller.BUTTON_INVOICE_SAVE);
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(this.listener);
+        cancelButton.setActionCommand(Controller.BUTTON_INVOICE_CANCEL);
 
-        jButton5.setText("+");
-        jButton5.addActionListener(this.listener);
-        jButton5.setActionCommand(Controller.BUTTON_ADD_ITEM);
-        jButton6.setText("-");
-        jButton6.addActionListener(this.listener);
-        jButton6.setActionCommand(Controller.BUTTON_DELETE_ITEM);
+        addLineButton.setText("+");
+        addLineButton.addActionListener(this.listener);
+        addLineButton.setActionCommand(Controller.BUTTON_ADD_ITEM);
+        deleteLineButton.setText("-");
+        deleteLineButton.addActionListener(this.listener);
+        deleteLineButton.setActionCommand(Controller.BUTTON_DELETE_ITEM);
 
-        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
+        GroupLayout invoiceLinesPanelLayout = new GroupLayout(invoiceLinesPanel);
+        invoiceLinesPanel.setLayout(invoiceLinesPanelLayout);
+        invoiceLinesPanelLayout.setHorizontalGroup(
+                invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(invoiceLinesPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jLabel6)
-                                                        .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                .addComponent(jLabel2)
-                                                                .addComponent(jLabel4)
-                                                                .addComponent(jLabel5)
-                                                                .addComponent(jLabel7)))
-                                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(invoiceLinesPanelLayout.createSequentialGroup()
+                                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(invoiceLinesLabel)
+                                                        .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                .addComponent(invoiceNumberKeyLabel)
+                                                                .addComponent(invoiceDateLabel)
+                                                                .addComponent(invoiceCustomerLabel)
+                                                                .addComponent(invoiceTotalKeyLabel)))
+                                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addGroup(invoiceLinesPanelLayout.createSequentialGroup()
                                                                 .addGap(49, 49, 49)
-                                                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                                        .addComponent(jLabel8)
-                                                                        .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
-                                                                        .addGroup(jPanel2Layout.createSequentialGroup()
-                                                                                .addComponent(jButton3)
+                                                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(invoiceTotalValueLabel)
+                                                                        .addComponent(invoiceCustomerField, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(invoiceDateField, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                                                                        .addGroup(invoiceLinesPanelLayout.createSequentialGroup()
+                                                                                .addComponent(saveChangesButton)
                                                                                 .addGap(38, 38, 38)
-                                                                                .addComponent(jButton4))
-                                                                        .addComponent(jLabel3)))
-                                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                                .addComponent(cancelButton))
+                                                                        .addComponent(invoiceNumberValueLabel)))
+                                                        .addGroup(invoiceLinesPanelLayout.createSequentialGroup()
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jButton5)
+                                                                .addComponent(addLineButton)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jButton6))))
-                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                .addComponent(deleteLineButton))))
+                                        .addGroup(invoiceLinesPanelLayout.createSequentialGroup()
                                                 .addGap(16, 16, 16)
-                                                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 478, GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(invoiceLinesTableScrollPane, GroupLayout.PREFERRED_SIZE, 478, GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap(52, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        invoiceLinesPanelLayout.setVerticalGroup(
+                invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, invoiceLinesPanelLayout.createSequentialGroup()
                                 .addGap(63, 63, 63)
-                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3))
+                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(invoiceNumberKeyLabel)
+                                        .addComponent(invoiceNumberValueLabel))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(invoiceDateLabel)
+                                        .addComponent(invoiceDateField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel5)
-                                        .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(invoiceCustomerLabel)
+                                        .addComponent(invoiceCustomerField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel7)
-                                        .addComponent(jLabel8))
+                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(invoiceTotalKeyLabel)
+                                        .addComponent(invoiceTotalValueLabel))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel6)
-                                        .addComponent(jButton5)
-                                        .addComponent(jButton6))
+                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(invoiceLinesLabel)
+                                        .addComponent(addLineButton)
+                                        .addComponent(deleteLineButton))
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 330, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(invoiceLinesTableScrollPane, GroupLayout.PREFERRED_SIZE, 330, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                                .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButton3)
-                                        .addComponent(jButton4))
+                                .addGroup(invoiceLinesPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(saveChangesButton)
+                                        .addComponent(cancelButton))
                                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel2);
+        getContentPane().add(invoiceLinesPanel);
 
-        jMenu1.setText("File");
+        fileMenu.setText("File");
 
-        jMenuItem1.setText("Load File");
-        jMenuItem1.addActionListener(listener);
-        jMenuItem1.setActionCommand(Controller.FILE_LOAD);
-        jMenu1.add(jMenuItem1);
+        loadMenuItem.setText("Load File");
+        loadMenuItem.addActionListener(listener);
+        loadMenuItem.setActionCommand(Controller.FILE_LOAD);
+        fileMenu.add(loadMenuItem);
 
-        jMenuItem2.setText("Save File");
-        jMenuItem2.addActionListener(listener);
-        jMenuItem2.setActionCommand(Controller.FILE_SAVE);
-        jMenu1.add(jMenuItem2);
+        saveMenuItem.setText("Save File");
+        saveMenuItem.addActionListener(listener);
+        saveMenuItem.setActionCommand(Controller.FILE_SAVE);
+        fileMenu.add(saveMenuItem);
 
-        jMenuBar1.add(jMenu1);
+        menuBar.add(fileMenu);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menuBar);
 
         pack();
 
-        this.add(jPanel2);
+        this.add(invoiceLinesPanel);
         this.setExtendedState(MAXIMIZED_BOTH);
 
         /* Displays some data upon booting */
@@ -385,30 +384,30 @@ public class DisplayedFrame extends JFrame{
     private void init(){
         listener = new Controller();
 
-        jPanel1 = new JPanel();
-        jScrollPane1 = new JScrollPane();
-        jTable1 = new JTable();
-        jButton1 = new JButton();
-        jButton2 = new JButton();
-        jPanel2 = new JPanel();
-        jLabel6 = new JLabel();
-        jLabel7 = new JLabel();
-        jLabel8 = new JLabel();
-        jScrollPane2 = new JScrollPane();
-        jTable2 = new JTable();
-        jLabel2 = new JLabel();
-        jLabel3 = new JLabel();
-        jLabel4 = new JLabel();
-        jTextField1 = new JTextField();
-        jLabel5 = new JLabel();
-        jTextField2 = new JTextField();
-        jButton3 = new JButton();
-        jButton4 = new JButton();
-        jButton5 = new JButton();
-        jButton6 = new JButton();
-        jMenuBar1 = new JMenuBar();
-        jMenu1 = new JMenu();
-        jMenuItem1 = new JMenuItem();
-        jMenuItem2 = new JMenuItem();
+        invoiceHeadersPanel = new JPanel();
+        invoiceHeadersTableScrollPane = new JScrollPane();
+        invoiceHeadersTable = new JTable();
+        createInvoiceButton = new JButton();
+        deleteInvoiceButton = new JButton();
+        invoiceLinesPanel = new JPanel();
+        invoiceLinesLabel = new JLabel();
+        invoiceTotalKeyLabel = new JLabel();
+        invoiceTotalValueLabel = new JLabel();
+        invoiceLinesTableScrollPane = new JScrollPane();
+        invoiceLinesTable = new JTable();
+        invoiceNumberKeyLabel = new JLabel();
+        invoiceNumberValueLabel = new JLabel();
+        invoiceDateLabel = new JLabel();
+        invoiceDateField = new JTextField();
+        invoiceCustomerLabel = new JLabel();
+        invoiceCustomerField = new JTextField();
+        saveChangesButton = new JButton();
+        cancelButton = new JButton();
+        addLineButton = new JButton();
+        deleteLineButton = new JButton();
+        menuBar = new JMenuBar();
+        fileMenu = new JMenu();
+        loadMenuItem = new JMenuItem();
+        saveMenuItem = new JMenuItem();
     }
 }

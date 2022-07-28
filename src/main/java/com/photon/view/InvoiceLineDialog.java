@@ -15,24 +15,24 @@ public class InvoiceLineDialog extends JDialog {
     public static final int ADD_FRAME = 0;
     public static final int UPDATE_FRAME = 1;
 
-    private int frameType;
+    private final int frameType;
 
     /** Declaration of needed containers */
-    private JButton jButton1;
-    private JButton jButton2;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
-    private JLabel jLabel3;
-    private JLabel jLabel4;
-    private JLabel jLabel6;
-    private JPanel jPanel1;
-    private JPanel jPanel2;
-    private JPanel jPanel3;
-    private JPanel jPanel4;
-    private JPanel jPanel6;
-    private JTextField jTextField1;
-    private JTextField jTextField2;
-    private JTextField jTextField3;
+    private JButton addUpdateButton;
+    private JButton cancelButton;
+    private JLabel itemNumberKeyLabel;
+    private JLabel descriptionLabel;
+    private JLabel priceLabel;
+    private JLabel countLabel;
+    private JLabel invoiceNumberValueLabel;
+    private JPanel lineNumberPanel;
+    private JPanel descriptionPanel;
+    private JPanel pricePanel;
+    private JPanel countPanel;
+    private JPanel buttonsPanel;
+    private JTextField descriptionField;
+    private JTextField priceField;
+    private JTextField countField;
 
     /** Holds raw data of InvoiceLine*/
     private String[] data = new String[4];
@@ -60,156 +60,156 @@ public class InvoiceLineDialog extends JDialog {
         setPreferredSize(new Dimension(500, 500));
         getContentPane().setLayout(new GridLayout(5, 1));
 
-        jLabel1.setText("Item no.");
+        itemNumberKeyLabel.setText("Item no.");
 
-        jLabel6.setText(data[0]);
+        invoiceNumberValueLabel.setText(data[0]);
 
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
+        GroupLayout lineNumberPanelLayout = new GroupLayout(lineNumberPanel);
+        lineNumberPanel.setLayout(lineNumberPanelLayout);
+        lineNumberPanelLayout.setHorizontalGroup(
+                lineNumberPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(lineNumberPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(itemNumberKeyLabel, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel6, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(invoiceNumberValueLabel, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(270, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                .addComponent(jLabel6))
+        lineNumberPanelLayout.setVerticalGroup(
+                lineNumberPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(lineNumberPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(itemNumberKeyLabel, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                .addComponent(invoiceNumberValueLabel))
         );
 
-        getContentPane().add(jPanel1);
+        getContentPane().add(lineNumberPanel);
 
-        jLabel2.setText("Description");
-        jTextField1.setText(data[1]);
+        descriptionLabel.setText("Description");
+        descriptionField.setText(data[1]);
 
-        GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
+        GroupLayout descriptionPanelLayout = new GroupLayout(descriptionPanel);
+        descriptionPanel.setLayout(descriptionPanelLayout);
+        descriptionPanelLayout.setHorizontalGroup(
+                descriptionPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(descriptionPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(descriptionLabel, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(descriptionField, GroupLayout.PREFERRED_SIZE, 250, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(120, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-                jPanel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                .addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        descriptionPanelLayout.setVerticalGroup(
+                descriptionPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(descriptionPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(descriptionLabel, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                .addComponent(descriptionField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
 
-        getContentPane().add(jPanel2);
+        getContentPane().add(descriptionPanel);
 
-        jLabel3.setText("Price per unit");
-        jTextField2.setText(data[2]);
-        jTextField2.addKeyListener(new KeyAdapter() {
+        priceLabel.setText("Price per unit");
+        priceField.setText(data[2]);
+        priceField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 if (Character.isLetter(e.getKeyChar())){
                     e.consume();
                 }
                 try {
-                    Double.parseDouble(jTextField2.getText()+ e.getKeyChar());
+                    Double.parseDouble(priceField.getText()+ e.getKeyChar());
                 }catch (NumberFormatException ex){
                     e.consume();
                 }
             }
         });
 
-        GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-                jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
+        GroupLayout pricePanelLayout = new GroupLayout(pricePanel);
+        pricePanel.setLayout(pricePanelLayout);
+        pricePanelLayout.setHorizontalGroup(
+                pricePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(pricePanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(priceLabel, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(priceField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(270, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-                jPanel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        pricePanelLayout.setVerticalGroup(
+                pricePanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(pricePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(priceLabel, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                .addComponent(priceField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
 
-        getContentPane().add(jPanel3);
+        getContentPane().add(pricePanel);
 
-        jLabel4.setText("Count");
+        countLabel.setText("Count");
 
-        jTextField3.setText(data[3]);
-        jTextField3.addKeyListener(new KeyAdapter() {
+        countField.setText(data[3]);
+        countField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 if (Character.isLetter(e.getKeyChar())){
                     e.consume();
                 }
                 try {
-                    Integer.parseInt(jTextField3.getText()+ e.getKeyChar());
+                    Integer.parseInt(countField.getText()+ e.getKeyChar());
                 }catch (NumberFormatException ex){
                     e.consume();
                 }
             }
         });
 
-        GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-                jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
+        GroupLayout countPanelLayout = new GroupLayout(countPanel);
+        countPanel.setLayout(countPanelLayout);
+        countPanelLayout.setHorizontalGroup(
+                countPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(countPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel4, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(countLabel, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField3, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(countField, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(270, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-                jPanel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel4, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                .addComponent(jTextField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        countPanelLayout.setVerticalGroup(
+                countPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(countPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(countLabel, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                                .addComponent(countField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
 
-        getContentPane().add(jPanel4);
+        getContentPane().add(countPanel);
 
-        jButton1.setText(frameType == UPDATE_FRAME ? "Update" : "Add");
-        jButton1.addActionListener(listener);
-        jButton1.setActionCommand(Controller.ITEM_FRAME_OKAY);
+        addUpdateButton.setText(frameType == UPDATE_FRAME ? "Update" : "Add");
+        addUpdateButton.addActionListener(listener);
+        addUpdateButton.setActionCommand(Controller.ITEM_FRAME_OKAY);
 
-        jButton2.setText("Cancel");
-        jButton2.addActionListener(listener);
-        jButton2.setActionCommand(Controller.ITEM_FRAME_CANCEL);
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(listener);
+        cancelButton.setActionCommand(Controller.ITEM_FRAME_CANCEL);
 
-        GroupLayout jPanel6Layout = new GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-                jPanel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel6Layout.createSequentialGroup()
+        GroupLayout buttonsPanelLayout = new GroupLayout(buttonsPanel);
+        buttonsPanel.setLayout(buttonsPanelLayout);
+        buttonsPanelLayout.setHorizontalGroup(
+                buttonsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(buttonsPanelLayout.createSequentialGroup()
                                 .addGap(140, 140, 140)
-                                .addComponent(jButton1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addUpdateButton, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
-                                .addComponent(jButton2, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cancelButton, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
                                 .addGap(140, 140, 140))
         );
-        jPanel6Layout.setVerticalGroup(
-                jPanel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+        buttonsPanelLayout.setVerticalGroup(
+                buttonsPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(GroupLayout.Alignment.TRAILING, buttonsPanelLayout.createSequentialGroup()
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel6Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jButton1)
-                                        .addComponent(jButton2))
+                                .addGroup(buttonsPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(addUpdateButton)
+                                        .addComponent(cancelButton))
                                 .addContainerGap())
         );
 
-        getContentPane().add(jPanel6);
+        getContentPane().add(buttonsPanel);
 
         this.setLocationRelativeTo(null);
 
@@ -221,28 +221,28 @@ public class InvoiceLineDialog extends JDialog {
     }
 
     public void updateData(){
-        data[1] = jTextField1.getText();
-        data[2] = jTextField2.getText();
-        data[3] = jTextField3.getText();
+        data[1] = descriptionField.getText();
+        data[2] = priceField.getText();
+        data[3] = countField.getText();
     }
 
     /** Initialises all variables */
     public void init(){
-        jPanel1 = new JPanel();
-        jLabel1 = new JLabel();
-        jLabel6 = new JLabel();
-        jPanel2 = new JPanel();
-        jLabel2 = new JLabel();
-        jTextField1 = new JTextField();
-        jPanel3 = new JPanel();
-        jLabel3 = new JLabel();
-        jTextField2 = new JTextField();
-        jPanel4 = new JPanel();
-        jLabel4 = new JLabel();
-        jTextField3 = new JTextField();
-        jPanel6 = new JPanel();
-        jButton1 = new JButton();
-        jButton2 = new JButton();
+        lineNumberPanel = new JPanel();
+        itemNumberKeyLabel = new JLabel();
+        invoiceNumberValueLabel = new JLabel();
+        descriptionPanel = new JPanel();
+        descriptionLabel = new JLabel();
+        descriptionField = new JTextField();
+        pricePanel = new JPanel();
+        priceLabel = new JLabel();
+        priceField = new JTextField();
+        countPanel = new JPanel();
+        countLabel = new JLabel();
+        countField = new JTextField();
+        buttonsPanel = new JPanel();
+        addUpdateButton = new JButton();
+        cancelButton = new JButton();
     }
 
     public int getFrameType() {
